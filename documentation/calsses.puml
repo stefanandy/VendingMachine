@@ -1,0 +1,27 @@
+@startuml
+class Pay
+
+Pay --|>PayByCoin
+Pay --|>PayByBill
+Pay --|>PayByCreditCard
+
+class GiveChange
+GiveChange--*CalculateChange
+
+class VerifyTransaction
+VerifyTransaction--|>VerifyTransactionByCoin
+VerifyTransaction--|>VerifyTransactionByCash
+VerifyTransaction--|>VerifyTransactionByCreditCard
+
+PayByCoin--*VerifyTransactionByCoin
+PayByBill--*VerifyTransactionByCash
+PayByCreditCard--*VerifyTransactionByCreditCard
+
+class SelectProduct
+GiveProdcut--*SelectProduct
+GiveProdcut--*VerifyTransactionByCoin
+GiveProdcut--*VerifyTransactionByCash
+GiveProdcut--*VerifyTransactionByCreditCard
+
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+actor CoinUser 
+CoinUser -> (VendingMachineCoinInterface)
+
+
+actor CashUser
+CashUser -> (VendingMachineCashInterface)
+
+
+actor CreditCardUser
+CreditCardUser -> (VendingMachineCreditCardInterface)
+
+
+(VendingMachineCoinInterface) --> (VendingMachineInterface)
+(VendingMachineCashInterface) --> VendingMachineInterface
+(VendingMachineCreditCardInterface) --> VendingMachineInterface
+
+
+VendingMachineInterface-->(CreditVerification):ChooseProduct
+CreditVerification-->(RETURN):NO
+CreditVerification-->(CONTINUE):YES
+
+CONTINUE-->(ProductDelivery)
+@enduml

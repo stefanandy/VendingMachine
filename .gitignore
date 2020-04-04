@@ -3,3 +3,10 @@
 ################################################################################
 
 /.vs
+/Businesss/.vs/Businesss/v16
+/Businesss/obj
+/BusinessTest/bin/Debug/netcoreapp3.1
+/BusinessTest/obj/Debug/netcoreapp3.1
+/BusinessTest/obj
+/UI.Console/obj
+/Businesss/bin/Debug/netcoreapp3.1

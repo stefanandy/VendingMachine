@@ -1,0 +1,24 @@
+@startuml
+
+Product--*ProductCollection
+IProductCollection--|>ProductCollection
+
+class Product{
+    -Name
+    #Price
+}
+
+class ProductCollection{
+    -products
+}
+
+interface IProductCollection{
+    +Add()
+    +Remove()
+    +GetItem()
+    +Count()
+}
+
+
+
+@enduml

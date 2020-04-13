@@ -12,5 +12,7 @@ namespace Business
         public Product GetItem(Product item);
         public void Remove(Product item);
         public int Count();
+        public void ContainersPopulation();
+        public Product GetItem(ContainableItem itemCoordinates);
     }
 }

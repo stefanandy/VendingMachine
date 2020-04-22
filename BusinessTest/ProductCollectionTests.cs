@@ -85,5 +85,36 @@ namespace BusinessTest
 
             Assert.AreEqual(1, products.Count());
         }
+
+        [TestMethod]
+        public void Test_Containers()
+        {
+            IProductCollection products = new ProductCollection();
+            Product firstItem = new Product();
+            Product secondItem = new Product();
+
+            firstItem.Name = "Chips";
+            secondItem.Name = "Water";
+
+            products.Add(firstItem);
+            products.Add(secondItem);
+
+            products.Add(new Product { Name = "Chips" });
+            products.Add(new Product { Name = "Water" });
+
+            products.Add(new Product { Name = "Chips" });
+            products.Add(new Product { Name = "Water" });
+
+            products.Add(new Product { Name = "Chips" });
+            products.Add(new Product { Name = "Water" });
+            products.Add(new Product { Name = "Chips" });
+            products.Add(new Product { Name = "Water" });
+
+            products.ContainersPopulation();
+            Product water = products.GetItem(new ContainableItem(0,1));
+
+
+            Assert.AreEqual(secondItem.Name, water.Name);
+        }
     }
 }

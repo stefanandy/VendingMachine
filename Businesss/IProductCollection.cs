@@ -9,10 +9,11 @@ namespace Business
     public interface IProductCollection
     {
         public void Add(Product item);
-        public Product GetItem(Product item);
-        public void Remove(Product item);
+        public Product GetItem(int id);
+        public Product GetItem(ContainableItem coordinates);
+        public void Remove(int id);
+        public void Remove(ContainableItem coordinates);
         public int Count();
-        public void ContainersPopulation();
-        public Product GetItem(ContainableItem itemCoordinates);
+     
     }
 }

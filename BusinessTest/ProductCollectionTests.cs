@@ -44,12 +44,14 @@ namespace BusinessTest
             Product secondItem = new Product();
 
             firstItem.Name = "Chips";
+            firstItem.Id = 0;
             secondItem.Name = "Water";
+            secondItem.Id = 1;
 
             products.Add(firstItem);
             products.Add(secondItem);
 
-            Assert.AreEqual(secondItem, products.GetItem(secondItem));
+            Assert.AreEqual(secondItem, products.GetItem(secondItem.Id));
         }
 
         [TestMethod]
@@ -60,7 +62,9 @@ namespace BusinessTest
             Product secondItem = new Product();
 
             firstItem.Name = "Chips";
+            firstItem.Id = 0;
             secondItem.Name = "Water";
+            secondItem.Id = 1;
 
             products.Add(firstItem);
             products.Add(secondItem);
@@ -78,10 +82,15 @@ namespace BusinessTest
             firstItem.Name = "Chips";
             secondItem.Name = "Water";
 
+            firstItem.Name = "Chips";
+            firstItem.Id = 0;
+            secondItem.Name = "Water";
+            secondItem.Id = 1;
+
             products.Add(firstItem);
             products.Add(secondItem);
 
-            products.Remove(secondItem);
+            products.Remove(secondItem.Id);
 
             Assert.AreEqual(1, products.Count());
         }
@@ -94,23 +103,24 @@ namespace BusinessTest
             Product secondItem = new Product();
 
             firstItem.Name = "Chips";
+            firstItem.Id = 0;
             secondItem.Name = "Water";
+            secondItem.Id = 1;
 
             products.Add(firstItem);
             products.Add(secondItem);
 
-            products.Add(new Product { Name = "Chips" });
-            products.Add(new Product { Name = "Water" });
+            products.Add(new Product { Name = "Chips" ,Id=2});
+            products.Add(new Product { Name = "Water", Id = 3 });
 
-            products.Add(new Product { Name = "Chips" });
-            products.Add(new Product { Name = "Water" });
+            products.Add(new Product { Name = "Chips", Id = 4 });
+            products.Add(new Product { Name = "Water", Id = 5 });
 
-            products.Add(new Product { Name = "Chips" });
-            products.Add(new Product { Name = "Water" });
-            products.Add(new Product { Name = "Chips" });
-            products.Add(new Product { Name = "Water" });
+            products.Add(new Product { Name = "Chips", Id = 6 });
+            products.Add(new Product { Name = "Water", Id = 7 });
+            products.Add(new Product { Name = "Chips", Id = 8 });
 
-            products.ContainersPopulation();
+          
             Product water = products.GetItem(new ContainableItem(0,1));
 
 

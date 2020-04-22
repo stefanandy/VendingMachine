@@ -8,35 +8,65 @@ namespace Businesss
 {
     public class ProductCollection:IProductCollection
     {
-        List<Product> products;
-        Dictionary<ContainableItem, Product> containers;
+        private  int Row=0;
+        private  int Column=0;
+
+        private readonly int COLUMN_MAX = 3;
+        private readonly int ROW_MAX = 3;
+        private readonly int ZERO=0;
+
+       
+        Dictionary<ContainableItem, Product> products;
 
         public ProductCollection() {
-            products = new List<Product>();
-            containers = new Dictionary<ContainableItem, Product>();
+            
+            products = new Dictionary<ContainableItem, Product>();
         }
 
-        public void Add(Product item) {
-            products.Add(item);
-        }
-
-        public Product GetItem(Product item)
+        public void Add(Product item) 
         {
-            if (products.Contains(item))
+            if (Row < ROW_MAX)
             {
-                return products.Find(x => x == item);
+                AddToColumn(item);
+            }
+            else if (Row==ROW_MAX) 
+            {
+                throw new System.Exception("There is no more space in the vending machine");
+            }
+        }
+
+        public void Add(ContainableItem coordinates, Product item) 
+        {
+            products.Add(coordinates, item);
+        }
+
+        public Product GetItem(int id)
+        {
+            var product = products.Where(x => x.Value.Id.Equals(id))
+                        .Select(y=>y.Value)
+                        .Single();
+            if (product!=null)
+            {
+                return product;
             }
             throw new System.Exception("Item not found");
         }
 
-        public void Remove(Product item)
+        public void Remove(int id)
         {
-            if (products.Contains(item))
+            var key = products.Where(x => x.Value.Id.Equals(id))
+                        .Select(y => y.Key)
+                        .Single();
+            if (key!=null)
             {
-                products.Remove(item);
+                products.Remove(key);
                 return;
             }
             throw new System.Exception("Item not found");
+        }
+        public void Remove(ContainableItem coordinates)
+        {
+            products.Remove(coordinates);
         }
 
         public int Count()
@@ -44,25 +74,32 @@ namespace Businesss
             return products.Count;
         }
 
-        public Product GetItem(ContainableItem itemCoordinates)
+        public Product GetItem(ContainableItem coordinates)
         {
-            return containers.Where(x => x.Key.Row==itemCoordinates.Row 
-                                    && x.Key.Column==itemCoordinates.Column)
+            var item = products.Where(x => x.Key.Row== coordinates.Row 
+                                    && x.Key.Column== coordinates.Column)
                                     .FirstOrDefault()
-                                    .Value;   
+                                    .Value;
+            return item;
         }
 
-        public void ContainersPopulation()
+
+        private void AddToColumn(Product item)
         {
-            int counter =0;
-            for (int i = 0; i < Math.Sqrt(products.Count)-1;i++)
+            if (Column < COLUMN_MAX)
             {
-                for (int j = 0; j < Math.Sqrt(products.Count)-1; j++)
-                {
-                    containers.Add(new ContainableItem(i, j), products[counter]);
-                    counter++;
-                }
+                products.Add(new ContainableItem(Row, Column), item);
+                Column++;
+
+            }
+            else if (Column == COLUMN_MAX)
+            {
+                Column = ZERO;
+                Row++;
+                products.Add(new ContainableItem(Row, Column), item);
             }
         }
+
+        
     }
 }

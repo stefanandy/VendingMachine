@@ -2,6 +2,7 @@
 
 Product--*ProductCollection
 IProductCollection--|>ProductCollection
+ContainbleItem--*ProductCollection
 
 class Product{
     -Name
@@ -10,6 +11,12 @@ class Product{
 
 class ProductCollection{
     -products
+}
+
+class ContainbleItem{
+    +Row
+    +Column
+    +Count
 }
 
 interface IProductCollection{

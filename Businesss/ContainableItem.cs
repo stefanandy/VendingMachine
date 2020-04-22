@@ -10,7 +10,6 @@ namespace Business
         public int Row { get; set; }
         public int Column { get; set; }
 
-        public int Count { get; set; } = 30;
 
         public ContainableItem(int row, int column)
         {

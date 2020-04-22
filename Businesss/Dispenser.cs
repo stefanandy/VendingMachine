@@ -9,7 +9,7 @@ namespace Business
     public class Dispenser
     {
         private IProductCollection Products;
-        public bool Dispensed = false;
+        
 
         public Dispenser(ProductCollection products) 
         {

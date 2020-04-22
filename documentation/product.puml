@@ -3,6 +3,7 @@
 Product--*ProductCollection
 IProductCollection--|>ProductCollection
 ContainbleItem--*ProductCollection
+ProductCollection--o Dispenser
 
 class Product{
     -Name
@@ -26,6 +27,12 @@ interface IProductCollection{
     +Count()
 }
 
+class Dispenser{
+    -products
+    +ExtractItem()
+    +DeliverItem()
+    
+}
 
 
 @enduml

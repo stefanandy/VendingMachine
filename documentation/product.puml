@@ -2,6 +2,8 @@
 
 Product--*ProductCollection
 IProductCollection--|>ProductCollection
+ContainbleItem--*ProductCollection
+ProductCollection--o Dispenser
 
 class Product{
     -Name
@@ -12,6 +14,12 @@ class ProductCollection{
     -products
 }
 
+class ContainbleItem{
+    +Row
+    +Column
+    +Count
+}
+
 interface IProductCollection{
     +Add()
     +Remove()
@@ -19,6 +27,12 @@ interface IProductCollection{
     +Count()
 }
 
+class Dispenser{
+    -products
+    +ExtractItem()
+    +DeliverItem()
+    
+}
 
 
 @enduml

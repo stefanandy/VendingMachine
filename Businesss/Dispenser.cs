@@ -11,6 +11,12 @@ namespace Business
         private IProductCollection Products;
         
 
+        public Dispenser(ProductCollection products, PaymentTerminal terminal)
+        {
+            Products = products;
+          
+        }
+
         public Dispenser(ProductCollection products) 
         {
             Products = products;
@@ -29,8 +35,13 @@ namespace Business
         public bool DeliverItem(ContainableItem coordinates) 
         {
             Product item= ExtractItem(coordinates);
-           
-            return item != null ? true : false;
+            if (item!=null)
+            {
+                return true;
+            }
+            return false;
         }
+
+       
     }
 }

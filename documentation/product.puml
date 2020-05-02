@@ -5,6 +5,7 @@ IProductCollection--|>ProductCollection
 ContainbleItem--*ProductCollection
 ProductCollection--o Dispenser
 
+
 class Product{
     -Name
     #Price
@@ -32,6 +33,12 @@ class Dispenser{
     +ExtractItem()
     +DeliverItem()
     
+}
+
+class PaymentTerminal{
+    +AddCoins()
+    +AddCash()
+    +VerifyTransaction(price)
 }
 
 

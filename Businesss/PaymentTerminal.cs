@@ -4,11 +4,12 @@ using System.Text;
 
 namespace Business
 {
-    public class PaymentTerminal
+    public class PaymentTerminal: IObserver
     {
         private double BankNotes;
         private double Coins;
         private double Cash;
+        private double Price;
 
         public void AddCash(double bankNotes)
         {
@@ -22,6 +23,7 @@ namespace Business
         }
 
         public bool VerifyTransaction(double price) {
+            Price = price;
             if (PayWithCash())
             {
                 return VerifyCash(price);
@@ -48,13 +50,29 @@ namespace Business
         {
             return true;
         }
-        public void GiveChange(double price) {
+        public void GiveChange() {
+            var price = Price;
             if (Cash>0)
             {
                 double change = Cash - price;
                 MoneyInMachine.Coins -= change;
             }
             
+        }
+
+        void UpdateMoney() {
+            MoneyInMachine.Coins += Coins;
+            MoneyInMachine.BankNotes += BankNotes;
+        }
+        void ResetMoney() {
+            Coins = 0;
+            BankNotes = 0;
+        }
+
+        public void Update() {
+            UpdateMoney();
+            GiveChange();
+            ResetMoney();
         }
     }
 }

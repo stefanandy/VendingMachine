@@ -6,6 +6,8 @@ namespace Business
 {
     public static class MoneyInMachine
     {
+        public static double BankNotes { get; set; }
+
         public static double Coins { get; set; }
     }
 }

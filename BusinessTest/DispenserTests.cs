@@ -21,10 +21,17 @@ namespace BusinessTest
         public void Dispense_Item_TRUE() 
         {
             ProductCollection products = new ProductCollection();
-            products.Add(new Product { Name = "Chips", Id = 0 });
-            products.Add(new Product { Name = "Water", Id = 1 });
+            PaymentTerminal payment = new PaymentTerminal();
+            
+            products.Add(new Product { Name = "Chips", Id = 0 , Price=2.5});
+            products.Add(new Product { Name = "Water", Id = 1 , Price=3.5});
 
-            Dispenser dispenser = new Dispenser(products);
+
+            payment.AddCash(2);
+            payment.AddCoins(0.5);
+
+
+            Dispenser dispenser = new Dispenser(products,payment);
 
             var value = dispenser.DeliverItem(new ContainableItem(0, 0));
 

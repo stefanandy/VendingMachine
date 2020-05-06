@@ -3,8 +3,10 @@
 Product--*ProductCollection
 IProductCollection--|>ProductCollection
 ContainbleItem--*ProductCollection
-ProductCollection--o Dispenser
-
+IObserver--|>Dispenser
+IObservable--|>PaymentTerminal
+ProductCollection --o Dispenser
+PaymentTerminal --"Notify" Dispenser
 
 class Product{
     -Name
@@ -28,11 +30,21 @@ interface IProductCollection{
     +Count()
 }
 
+interface IObserver{
+    +Update()
+}
+
 class Dispenser{
     -products
     +ExtractItem()
     +DeliverItem()
     
+}
+
+interface IObservable{
+    +Add()
+    +Remove()
+    +Notify()
 }
 
 class PaymentTerminal{

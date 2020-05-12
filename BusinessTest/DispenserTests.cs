@@ -21,14 +21,45 @@ namespace BusinessTest
         public void Dispense_Item_TRUE() 
         {
             ProductCollection products = new ProductCollection();
-            products.Add(new Product { Name = "Chips", Id = 0 });
-            products.Add(new Product { Name = "Water", Id = 1 });
+            PaymentTerminal payment = new PaymentTerminal();
+            
+            products.Add(new Product { Name = "Chips", Id = 0 , Price=2.5});
+            products.Add(new Product { Name = "Water", Id = 1 , Price=3.5});
+
+            payment.AddCash(2);
+            payment.AddCoins(0.5);
+
 
             Dispenser dispenser = new Dispenser(products);
+            ContainableItem itemCoordinates = new ContainableItem(0, 0);
+            payment.Add(dispenser);
 
-            var value = dispenser.DeliverItem(new ContainableItem(0, 0));
+            payment.VerifyTransaction(products.GetItem(0).Price);
+            var value = dispenser.DeliverItem(itemCoordinates);
 
             Assert.AreEqual(true, value);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(System.Exception))]
+        public void Dispense_Item_InsuficientFunds()
+        {
+            ProductCollection products = new ProductCollection();
+            PaymentTerminal payment = new PaymentTerminal();
+
+            products.Add(new Product { Name = "Chips", Id = 0, Price = 2.5 });
+            products.Add(new Product { Name = "Water", Id = 1, Price = 3.5 });
+
+            payment.AddCash(2);
+
+            Dispenser dispenser = new Dispenser(products);
+            ContainableItem itemCoordinates = new ContainableItem(0, 0);
+            payment.Add(dispenser);
+
+            payment.VerifyTransaction(products.GetItem(0).Price);
+            var value = dispenser.DeliverItem(itemCoordinates);
+
+            Assert.AreEqual(false, value);
         }
     }
 }

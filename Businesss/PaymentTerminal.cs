@@ -4,11 +4,18 @@ using System.Text;
 
 namespace Business
 {
-    public class PaymentTerminal
+    public class PaymentTerminal: IObservable
     {
         private double BankNotes;
         private double Coins;
         private double Cash;
+        private double Price;
+
+        private List<IObserver> Subscribers;
+
+        public PaymentTerminal() {
+            Subscribers = new List<IObserver>();
+        }
 
         public void AddCash(double bankNotes)
         {
@@ -22,6 +29,7 @@ namespace Business
         }
 
         public bool VerifyTransaction(double price) {
+            Price = price;
             if (PayWithCash())
             {
                 return VerifyCash(price);
@@ -33,6 +41,7 @@ namespace Business
 
         private bool VerifyCreditCardTransaction(double price)
         {
+            Notify();
             return true;
         }
 
@@ -41,6 +50,7 @@ namespace Business
             {
                 throw new System.Exception("Insuficient funds, add more money");
             }
+            Notify();
             return true;
         }
 
@@ -48,13 +58,32 @@ namespace Business
         {
             return true;
         }
-        public void GiveChange(double price) {
+        public void GiveChange() {
+            var price = Price;
             if (Cash>0)
             {
                 double change = Cash - price;
                 MoneyInMachine.Coins -= change;
             }
             
+        }
+     
+        public void Add(IObserver subscriber)
+        {
+            Subscribers.Add(subscriber);
+        }
+
+        public void Remove(IObserver subscriber)
+        {
+            Subscribers.Remove(subscriber);
+        }
+
+        public void Notify()
+        {
+            foreach (var subscriber in Subscribers)
+            {
+                subscriber.Update();
+            }
         }
     }
 }

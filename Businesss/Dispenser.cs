@@ -1,4 +1,4 @@
-﻿using Businesss;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,9 +16,9 @@ namespace Business
             Products = products;
         }
 
-        public bool DeliverItem(ContainableItem coordinates) 
+        public bool DeliverItem(int Row, int Column) 
         {
-            Product item= Products.GetItem(coordinates);
+            ContainableItem item= Products.GetItem(Row,Column);
             if (item!=null && canDeliver==true)
             {
                 canDeliver = false;
@@ -29,7 +29,7 @@ namespace Business
 
         public bool DeliverItem(int id)
         {
-            Product item = Products.GetItem(id);
+            ContainableItem item = Products.GetItem(id);
             if (item != null && canDeliver == true)
             {
                 canDeliver = false;

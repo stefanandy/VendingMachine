@@ -4,17 +4,31 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BusinessTest
+namespace PersistanceTests
 {
     [TestClass]
     public class PaymentTerminalTests
     {
-        [TestMethod]
-        public void Payment_Test_SUCCESS() {
-            PaymentTerminal terminal = new PaymentTerminal();
+
+        PaymentTerminal terminal;
+
+
+        [TestInitialize]
+        public void TestInitialize() {
+            terminal = new PaymentTerminal();
             terminal.AddCash(2);
             terminal.AddCoins(0.5);
-            var result = terminal.VerifyTransaction(2.5);
+        }
+
+        [TestCleanup]
+        public void TestCleanUp() {
+            terminal = null;
+        }
+
+        [TestMethod]
+        public void Payment_Test_SUCCESS() {
+            
+            var result = terminal.Pay(2.5);
             Assert.AreEqual(true, result);
         
         }
@@ -22,11 +36,8 @@ namespace BusinessTest
         [TestMethod]
         [ExpectedException(typeof(System.Exception))]
         public void Payment_Test_FAIL()
-        {
-            PaymentTerminal terminal = new PaymentTerminal();
-            terminal.AddCash(2);
-            terminal.AddCoins(0.5);
-            var result = terminal.VerifyTransaction(3.5);
+        {            
+            var result = terminal.Pay(3.5);
         }
     }
 }

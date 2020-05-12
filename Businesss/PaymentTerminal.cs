@@ -28,20 +28,27 @@ namespace Business
             Cash += coins;
         }
 
-        public bool VerifyTransaction(double price) {
+        public bool Pay(double price) {
             Price = price;
             if (PayWithCash())
             {
-                return VerifyCash(price);
+                if (VerifyCash(price))
+                {
+                    Notify();
+                    return true;
+                } 
             }
-       
-            return VerifyCreditCardTransaction(price);
-      
+            if (VerifyCreditCardTransaction(price))
+            {
+                Notify();
+                return true;
+            }
+            return false;
         }
 
         private bool VerifyCreditCardTransaction(double price)
         {
-            Notify();
+           
             return true;
         }
 
@@ -49,8 +56,7 @@ namespace Business
             if (price> Cash)
             {
                 throw new System.Exception("Insuficient funds, add more money");
-            }
-            Notify();
+            }          
             return true;
         }
 

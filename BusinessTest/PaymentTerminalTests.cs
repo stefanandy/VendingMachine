@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PersistanceTests
+namespace BusinessTests
 {
     [TestClass]
     public class PaymentTerminalTests

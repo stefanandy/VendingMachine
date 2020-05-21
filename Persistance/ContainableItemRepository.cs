@@ -45,8 +45,31 @@ namespace Persistance
             return entitys;
         }
 
-        ~ContainableItemRepository() {
-            Context.Dispose();
+        public async Task Add(List<ContainableItem> items)
+        {
+            foreach (var item in items)
+            {
+                await Context.ContainbleItem.AddAsync(item);
+            }
+            await Context.SaveChangesAsync();
+        }
+
+        public async Task<ContainableItem> GetByPosition(int row, int column)
+        {
+            var item = await Context.ContainbleItem.SingleAsync(x => x.Row == row && x.Column == column);
+            return item;
+        }
+
+        public async Task Delete(int row, int column)
+        {
+            var item = await GetByPosition(row,column);
+            Context.ContainbleItem.Remove(item);
+            await Context.SaveChangesAsync();
+        }
+
+        public int Count()
+        {
+            return Context.ContainbleItem.Count();
         }
     }
 }

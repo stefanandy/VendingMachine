@@ -1,10 +1,13 @@
 ﻿using Business;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Persistance;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace PersistanceTests
+namespace BusinessTests
 {
     [TestClass]
     public class DispenserTests
@@ -14,23 +17,26 @@ namespace PersistanceTests
         PaymentTerminal payment;
         Product chips;
         Product water;
-
+        VendingDbContext context;
+        IContainableItemRepository repository;
        
 
         [TestInitialize]
-        public void TestInitialize() {
-            products = new ProductCollection();
+        public async Task TestInitialize() {
+            context = new VendingDbContext();
+            repository = new ContainableItemRepository(context);
+            products = new ProductCollection(repository);
             payment = new PaymentTerminal();
 
             chips = new Product { Name = "Chips", Price = 2.5 };
             water = new Product { Name = "Water", Price = 3.5 };
 
-            products.Add(new ContainableItem(0, 0, 0, chips));
-            products.Add(new ContainableItem(0, 1, 1, water));
+            await products.Add(new ContainableItem(0, 0, chips));
+            await products.Add(new ContainableItem(0, 1, water));
         }
 
         [TestMethod]
-        public void Dispense_Item_TRUE() 
+        public async Task Dispense_Item_TRUE() 
         {
             
             payment.AddCash(2);
@@ -40,8 +46,8 @@ namespace PersistanceTests
             Dispenser dispenser = new Dispenser(products);
             
             payment.Add(dispenser);
-
-            payment.Pay(products.GetItem(0,0).Item.Price);
+            var item = await products.GetItem(0, 0);
+            payment.Pay(item.Item.Price);
             var value = dispenser.DeliverItem(0,0);
 
             Assert.AreEqual(true, value);
@@ -49,23 +55,17 @@ namespace PersistanceTests
 
         [TestMethod]
         [ExpectedException(typeof(System.Exception))]
-        public void Dispense_Item_InsuficientFunds()
+        public async Task Dispense_Item_InsuficientFunds()
         {
-            ProductCollection products = new ProductCollection();
-            PaymentTerminal payment = new PaymentTerminal();
-            Product chips = new Product { Name = "Chips", Price = 2.5 };
-            Product water = new Product { Name = "Water", Price = 3.5 };
-
-            products.Add(new ContainableItem(0, 0, 0, chips));
-            products.Add(new ContainableItem(0, 1, 1, water));
+            
 
             payment.AddCash(2);
 
             Dispenser dispenser = new Dispenser(products);
           
             payment.Add(dispenser);
-
-            payment.Pay(products.GetItem(0).Item.Price);
+            var item = await products.GetItem(0, 0);
+            payment.Pay(item.Item.Price);
             var value = dispenser.DeliverItem(0,1);
 
             Assert.AreEqual(false, value);

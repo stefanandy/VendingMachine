@@ -11,3 +11,8 @@
 /UI.Console/obj
 /Businesss/bin/Debug/netcoreapp3.1
 /Businesss/.vs/Businesss/DesignTimeBuild
+/Persistance/bin/Debug/netcoreapp3.1
+/Persistance/obj
+/PersitanceTests/bin/Debug/netcoreapp3.1
+/PersitanceTests/obj
+/UI.Console/bin/Debug/netcoreapp3.1

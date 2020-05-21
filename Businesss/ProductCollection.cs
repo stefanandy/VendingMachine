@@ -4,102 +4,78 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Businesss
+namespace Business
 {
     public class ProductCollection:IProductCollection
     {
-        private  int Row=0;
-        private  int Column=0;
+      
+        private List<ContainableItem> Products;
 
-        private readonly int COLUMN_MAX = 3;
-        private readonly int ROW_MAX = 3;
-        private readonly int ZERO=0;
 
-       
-        Dictionary<ContainableItem, Product> products;
+        public ProductCollection(List<ContainableItem> products) {
+            Products = products;
+        }
 
         public ProductCollection() {
             
-            products = new Dictionary<ContainableItem, Product>();
+            Products = new List<ContainableItem>();
         }
 
-        public void Add(Product item) 
+        public void Add(ContainableItem item) 
         {
-            if (Row < ROW_MAX)
-            {
-                AddToColumn(item);
-            }
-            else if (Row==ROW_MAX) 
-            {
-                throw new System.Exception("There is no more space in the vending machine");
-            }
+            Products.Add(item);
         }
+      
 
-        public void Add(ContainableItem coordinates, Product item) 
+        public ContainableItem GetItem(int id)
         {
-            products.Add(coordinates, item);
-        }
-
-        public Product GetItem(int id)
-        {
-            var product = products.Where(x => x.Value.Id.Equals(id))
-                        .Select(y=>y.Value)
-                        .Single();
-            if (product!=null)
+            var item = Products.Where(x => x.Id.Equals(id))
+                                .Single();
+                                
+            if (item!=null)
             {
-                return product;
+                return item;
             }
             throw new System.Exception("Item not found");
         }
 
         public void Remove(int id)
         {
-            var key = products.Where(x => x.Value.Id.Equals(id))
-                        .Select(y => y.Key)
+            var item = Products.Where(x => x.Id.Equals(id))                 
                         .Single();
-            if (key!=null)
+            if (item!=null)
             {
-                products.Remove(key);
+                Products.Remove(item);
                 return;
             }
             throw new System.Exception("Item not found");
         }
-        public void Remove(ContainableItem coordinates)
+        public void Remove(int Row, int Column)
         {
-            products.Remove(coordinates);
+            var item= Products.Where(x => x.Row == Row && x.Column == Column).Single();
+
+            if (item!=null)
+            {
+                Products.Remove(item);
+                return;
+            }
+            throw new System.Exception("Item not found");
         }
 
         public int Count()
         {
-            return products.Count;
+            return Products.Count;
         }
 
-        public Product GetItem(ContainableItem coordinates)
+        public ContainableItem GetItem( int Row, int Column)
         {
-            var item = products.Where(x => x.Key.Row== coordinates.Row 
-                                    && x.Key.Column== coordinates.Column)
-                                    .FirstOrDefault()
-                                    .Value;
+            var item = Products.Where(x => x.Row == Row
+                                    && x.Column == Column)
+                                    .Single();
+                                                            
             return item;
         }
 
-
-        private void AddToColumn(Product item)
-        {
-            if (Column < COLUMN_MAX)
-            {
-                products.Add(new ContainableItem(Row, Column), item);
-                Column++;
-
-            }
-            else if (Column == COLUMN_MAX)
-            {
-                Column = ZERO;
-                Row++;
-                products.Add(new ContainableItem(Row, Column), item);
-            }
-        }
-
-        
+      
     }
 }

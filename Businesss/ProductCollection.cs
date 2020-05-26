@@ -3,34 +3,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Business
 {
     public class ProductCollection:IProductCollection
-    {
-      
-        private List<ContainableItem> Products;
+    {           
+        private readonly IContainableItemRepository containableItemRepository;
 
-
-        public ProductCollection(List<ContainableItem> products) {
-            Products = products;
+        public ProductCollection(IContainableItemRepository repository) {
+            containableItemRepository = repository;
         }
 
-        public ProductCollection() {
-            
-            Products = new List<ContainableItem>();
-        }
 
-        public void Add(ContainableItem item) 
+        public async Task Add(ContainableItem item) 
         {
-            Products.Add(item);
+            await containableItemRepository.Add(item);
+        }
+
+        public async Task Add(List<ContainableItem> items) {
+            await containableItemRepository.Add(items);
         }
       
 
-        public ContainableItem GetItem(int id)
+        public async Task<ContainableItem> GetItem(int id)
         {
-            var item = Products.Where(x => x.Id.Equals(id))
-                                .Single();
+            var item = await containableItemRepository.GetById(id);
                                 
             if (item!=null)
             {
@@ -39,41 +37,50 @@ namespace Business
             throw new System.Exception("Item not found");
         }
 
-        public void Remove(int id)
+        public async Task Remove(int id)
         {
-            var item = Products.Where(x => x.Id.Equals(id))                 
-                        .Single();
-            if (item!=null)
+            try
             {
-                Products.Remove(item);
-                return;
+                var item = await containableItemRepository.GetById(id);
+                await containableItemRepository.Delete(item.Id);
             }
-            throw new System.Exception("Item not found");
-        }
-        public void Remove(int Row, int Column)
-        {
-            var item= Products.Where(x => x.Row == Row && x.Column == Column).Single();
-
-            if (item!=null)
+            catch (Exception)
             {
-                Products.Remove(item);
-                return;
+
+                throw new System.Exception("Item not found");
+            }          
+       }
+        public async Task Remove(int Row, int Column)
+        {
+            try
+            {
+                var item = await containableItemRepository.GetByPosition(Row,Column);
+                await containableItemRepository.Delete(Row, Column);
             }
-            throw new System.Exception("Item not found");
+            catch (Exception)
+            {
+
+                throw new System.Exception("Item not found");
+            }
         }
 
-        public int Count()
+        public async Task<int> Count()
         {
-            return Products.Count;
+            return containableItemRepository.Count();
         }
 
-        public ContainableItem GetItem( int Row, int Column)
+        public async Task<ContainableItem> GetItem( int Row, int Column)
         {
-            var item = Products.Where(x => x.Row == Row
-                                    && x.Column == Column)
-                                    .Single();
-                                                            
-            return item;
+            try
+            {
+                var item = await containableItemRepository.GetByPosition(Row, Column);
+                return item;
+            }
+            catch (Exception)
+            {
+
+                throw new System.Exception("Item not found");
+            }
         }
 
       

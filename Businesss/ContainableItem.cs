@@ -24,6 +24,13 @@ namespace Business
             Item = item;
         }
 
+        public ContainableItem(int row, int column,Product item)
+        {
+            Row = row;
+            Column = column;
+            Item = item;
+        }
+
         public ContainableItem() { }
 
        

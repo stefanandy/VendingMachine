@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Text;
 using Business;
 using Persistance;
+using System.Threading.Tasks;
 
-namespace PersistanceTests
+namespace PersitanceTests
 {
     [TestClass]
-    public class PersistanceTests
+    public class ContainableItemRepositoryTest
     {
         VendingDbContext Context;
         IContainableItemRepository repository;
@@ -19,7 +20,8 @@ namespace PersistanceTests
         public void TestInitialize() {           
             Context = new VendingDbContext();
             repository = new ContainableItemRepository(Context);
-            entity= new ContainableItem(0, 0, 1, new Product { Price = 1, Name = "Chips", });
+            entity= new ContainableItem(0, 0, 1, new Product { Price = 0, Name = "Chips" });
+
         }
 
         [TestCleanup]
@@ -30,19 +32,20 @@ namespace PersistanceTests
        
 
         [TestMethod]
-        public void Add_Entity() {           
-            repository.Add(entity);
+        public async Task Add_Entity() {
+            entity = new ContainableItem(0, 0, 1, new Product { Price = 0, Name = "Chips" });
+            await repository.Add(entity);
         }
 
         [TestMethod]
-        public void Get_Entity_By_Id() {
-            var sameEntity = repository.GetById(entity.Id);
+        public async Task Get_Entity_By_Id() {
+            var sameEntity = await repository.GetById(entity.Id);
             Assert.AreEqual(entity.Id, sameEntity.Id);
         }
 
         [TestMethod]
-        public void Delete_By_Id() {
-            repository.Delete(entity.Id);
+        public async Task Delete_By_Id() {
+            await repository.Delete(entity.Id);
         }
     }
 }

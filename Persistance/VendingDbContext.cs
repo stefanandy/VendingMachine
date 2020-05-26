@@ -10,6 +10,8 @@ namespace Persistance
     {
        
         public DbSet<Business.ContainableItem> ContainbleItem { get; set; }
+        public DbSet<Business.Product> Product { get; set; }
+        public DbSet<Business.SoldItem> SoldItem { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

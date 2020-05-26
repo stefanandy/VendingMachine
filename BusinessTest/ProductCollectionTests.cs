@@ -1,20 +1,30 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Business;
+using Persistance;
+using Moq;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
-namespace PersistanceTests
+
+namespace BusinessTests
 {
     [TestClass]
     public class ProductCollectionTests
     {
         IProductCollection products;
+        IContainableItemRepository repository;
         ContainableItem firstItem;
         ContainableItem secondItem;
+        VendingDbContext dbContext;
+        
 
         [TestInitialize]
         public void TestInitialize() {
-             products= new ProductCollection();
-             firstItem = new ContainableItem(0, 0, 0, new Product { Price = 0, Name = "Chips" });
-             secondItem = new ContainableItem(0, 0, 1, new Product { Price = 0, Name = "Water" });
+            dbContext = new VendingDbContext();    
+            repository = new ContainableItemRepository(dbContext);
+            products= new ProductCollection(repository);
+            firstItem = new ContainableItem(0, 0, new Product { Price = 0, Name = "Chips" });
+            secondItem = new ContainableItem(0, 0, new Product { Price = 0, Name = "Water" });
         }
 
         [TestCleanup]
@@ -25,49 +35,41 @@ namespace PersistanceTests
         }
 
         [TestMethod]
-        public void Add_1_Product()
+        public async Task Add_1_Product()
         {          
-            products.Add(firstItem);
-           
-            Assert.AreEqual(1, products.Count());
+            await products.Add(firstItem);           
+            var entity = await products.GetItem(1);
+            Assert.AreEqual(firstItem.Id,entity.Id);
         }
 
         [TestMethod]
-        public void Add_2_Products() 
+        public async Task Add_2_Products() 
         {          
-            products.Add(firstItem);
-            products.Add(secondItem);
-
-            Assert.AreEqual(2, products.Count());
+            await products.Add(secondItem);
+            var count = await products.Count();
+            Assert.AreEqual(2, count);
         }
 
         [TestMethod]
-        public void Get_Product()
+        public async Task Get_Product()
         {
-            products.Add(firstItem);
-            products.Add(secondItem);
-
-            Assert.AreEqual(secondItem, products.GetItem(secondItem.Id));
+            var secondProduct = await products.GetItem(3);
+            Assert.AreEqual(3, secondProduct.Id);
         }
 
         [TestMethod]
-        public void Count_Products() 
+        public async Task Count_Products() 
         {
-            products.Add(firstItem);
-            products.Add(secondItem);
-
-            Assert.AreEqual(2, products.Count());
+            var count = await products.Count();
+            Assert.AreEqual(2, count);
         }
 
         [TestMethod]
-        public void Remove_1_Product()
+        public async Task Remove_1_Product()
         {          
-            products.Add(firstItem);
-            products.Add(secondItem);
-
-            products.Remove(secondItem.Id);
-
-            Assert.AreEqual(1, products.Count());
+            await products.Remove(2);
+            var count = await products.Count();
+            Assert.AreEqual(1, count);
         }
 
      

@@ -19,6 +19,7 @@ namespace Persistance
         public async Task Add(SoldItem item)
         {
             await Context.SoldItem.AddAsync(item);
+            await Context.SaveChangesAsync();
         }
 
         public async Task<SoldItem> Get(int Id)

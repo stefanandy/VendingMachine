@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 
 namespace Business
 {
-    public class Dispenser:IObserver
+    public class Dispenser:IObserver, IReportObservable
     {
         private IProductCollection Products;
-        private Report Report;
+        private List<IReport> Reports;
         private bool canDeliver = false;
 
-        public Dispenser(IProductCollection products,Report report)
-        {
-            Products = products;
-            Report = report;
-        }
+       
         public Dispenser(IProductCollection products)
         {
             Products = products;
+            Reports = new List<IReport>();
+        }
+
+        public void AddReport(IReport report)
+        {
+            Reports.Add(report);
         }
 
         public async Task<bool> DeliverItem(int Row, int Column) 
@@ -29,7 +31,7 @@ namespace Business
             {
                 canDeliver = false;
                 SoldItem soldItem = new SoldItem { Item = containble.Item, TimeStamp = DateTime.Now };
-                await Report.Add(soldItem);
+                NotifyReport(soldItem);
                 return true;
             }
             return false;
@@ -42,10 +44,23 @@ namespace Business
             {
                 canDeliver = false;
                 SoldItem soldItem = new SoldItem { Item = containble.Item, TimeStamp = DateTime.Now };
-                await Report.Add(soldItem);
+                NotifyReport(soldItem);
                 return true;
             }
             return false;
+        }
+
+        public void NotifyReport(SoldItem item)
+        {
+            foreach (var report in Reports)
+            {
+                report.Add(item);
+            }
+        }
+
+        public void RemoveReport(IReport report)
+        {
+            Reports.Remove(report);
         }
 
         public void Update() {

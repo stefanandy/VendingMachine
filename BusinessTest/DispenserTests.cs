@@ -22,7 +22,7 @@ namespace BusinessTests
        
 
         [TestInitialize]
-        public async Task TestInitialize() {
+        public void  TestInitialize() {
             context = new VendingDbContext();
             repository = new ContainableItemRepository(context);
             products = new ProductCollection(repository);
@@ -30,25 +30,24 @@ namespace BusinessTests
 
             chips = new Product { Name = "Chips", Price = 2.5 };
             water = new Product { Name = "Water", Price = 3.5 };
-
-            await products.Add(new ContainableItem(0, 0, chips));
-            await products.Add(new ContainableItem(0, 1, water));
         }
 
         [TestMethod]
         public async Task Dispense_Item_TRUE() 
         {
-            
-            payment.AddCash(2);
+            await products.Add(new ContainableItem(0, 0, chips));
+            await products.Add(new ContainableItem(0, 1, water));
+
+            payment.AddCash(3);
             payment.AddCoins(0.5);
 
 
             Dispenser dispenser = new Dispenser(products);
             
-            payment.Add(dispenser);
-            var item = await products.GetItem(0, 0);
+            payment.AddSubscriber(dispenser);
+            var item = await products.GetItem(0, 1);
             payment.Pay(item.Item.Price);
-            var value = dispenser.DeliverItem(0,0);
+            var value = await dispenser.DeliverItem(0,1);
 
             Assert.AreEqual(true, value);
         }
@@ -63,12 +62,12 @@ namespace BusinessTests
 
             Dispenser dispenser = new Dispenser(products);
           
-            payment.Add(dispenser);
-            var item = await products.GetItem(0, 0);
+            payment.AddSubscriber(dispenser);
+            var item = await products.GetItem(0, 1);
             payment.Pay(item.Item.Price);
             var value = dispenser.DeliverItem(0,1);
 
-            Assert.AreEqual(false, value);
+           
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Business
 {
-    public class CsvWriter
+    public class CsvWriter:Writer
     {
         private readonly string  filePath;
 

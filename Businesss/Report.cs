@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace Business
 {
-    public class Report
+    public class Report : IReport
     {
         private readonly ISoldItemRepository Repository;
-        private readonly CsvWriter writer;
+        private readonly Writer Writer;
 
 
-        public Report(ISoldItemRepository repository, CsvWriter csvWriter)
+        public Report(ISoldItemRepository repository, Writer writer)
         {
             Repository = repository;
-            writer = csvWriter;
+            Writer = writer;
         }
 
         public Report() {
@@ -27,27 +27,31 @@ namespace Business
 
         public async Task WriteAllItemsSold() {
             var items =await  Repository.GetAll();
-            writer.WriteData(items);
+            Writer.WriteData(items);
         }
         public async Task WriteItemsSoldLast30Days()
         {
             var items = await Repository.GetSoldLast30Days();
-            writer.WriteData(items);
+            Writer.WriteData(items);
         }
         public async Task WriteItemsSoldLast7Days()
         {
             var items = await Repository.GetSoldLast7Days();
-            writer.WriteData(items);
+            Writer.WriteData(items);
         }
         public async Task WriteItemsSoldLast1Days()
         {
             var items = await Repository.GetSoldLast1Days();
-            writer.WriteData(items);
+            Writer.WriteData(items);
         }
 
         public async Task WriteTop5SoldItems() {
             var items = await Repository.GetTopFiveSoldItems();
-            writer.WriteData(items);
+            Writer.WriteData(items);
+        }
+
+        public void Update() { 
+            
         }
 
 

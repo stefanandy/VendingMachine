@@ -74,12 +74,12 @@ namespace Business
             
         }
      
-        public void Add(IObserver subscriber)
+        public void AddSubscriber(IObserver subscriber)
         {
             Subscribers.Add(subscriber);
         }
 
-        public void Remove(IObserver subscriber)
+        public void RemoveSubscriber(IObserver subscriber)
         {
             Subscribers.Remove(subscriber);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,6 @@ namespace Business
         {
 
             List<SoldItem> soldItems = File.ReadAllLines(filePath)
-                                           .Skip(1)
                                            .Select(v => FromCsv(v))
                                            .ToList();
             return soldItems;
@@ -23,10 +23,11 @@ namespace Business
             SoldItem soldItem = new SoldItem();
             Product product = new Product();
             product.Name = Convert.ToString(values[0]);
-            product.Price = Convert.ToDouble(values[1]);
+            product.Price = Convert.ToDouble(values[1])+Convert.ToDouble(values[2]);
             soldItem.Item = product;
-            soldItem.TimeStamp = Convert.ToDateTime(values[2]);
-            
+            soldItem.TimeStamp = Convert.ToDateTime(values[3],CultureInfo.CurrentCulture);
+
+
             return soldItem;
         }
     }

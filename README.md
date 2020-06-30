@@ -1,4 +1,4 @@
 # VendingMachine
 
-A project to demonstrate OOP Principles and Observable Design Pattern
+A project to demonstrate OOP Principles and Observable Design Pattern /n
 Technologies used: .NET Core 3.0, EF Core, MSSQL, MSUnitTesting

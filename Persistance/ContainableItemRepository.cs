@@ -31,7 +31,9 @@ namespace Persistance
 
         public async Task<ContainableItem> GetById(int Id)
         {
-            var item = await Context.ContainbleItem.FindAsync(Id);
+            var item = await Context.ContainbleItem
+                .Include(i => i.Item)
+                .FirstOrDefaultAsync(x=>x.Id==Id);
             if (item!=null)
             {
                 return item;
@@ -41,7 +43,7 @@ namespace Persistance
 
         public async Task<List<ContainableItem>> GetAll()
         {
-            var entitys = await Context.ContainbleItem.Select(x => x).ToListAsync();
+            var entitys = await Context.ContainbleItem.Include(i => i.Item).Select(x => x).ToListAsync();
             return entitys;
         }
 
@@ -56,7 +58,7 @@ namespace Persistance
 
         public async Task<ContainableItem> GetByPosition(int row, int column)
         {
-            var item = await Context.ContainbleItem.SingleAsync(x => x.Row == row && x.Column == column);
+            var item = await Context.ContainbleItem.Include(i=>i.Item).SingleAsync(x => x.Row == row && x.Column == column);
             return item;
         }
 

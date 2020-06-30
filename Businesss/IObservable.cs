@@ -7,8 +7,8 @@ namespace Business
     public interface  IObservable
     {
 
-        public void Add(IObserver observer);
-        public void Remove(IObserver obsever);
+        public void AddSubscriber(IObserver observer);
+        public void RemoveSubscriber(IObserver obsever);
         public void Notify();
     }
 }

@@ -16,39 +16,55 @@ namespace BusinessTests
         ISoldItemRepository SoldItemRepository;
         IProductCollection products;
         VendingDbContext Context;
-        Report report;
+        IReport report;
         string filePath = "report.csv";
-        CsvWriter writer;
+        Writer writer;
+        IReader reader;
         PaymentTerminal payment;
 
         [TestInitialize]
         public void InitTest()
         {
-            writer = new CsvWriter(filePath);
+            
             Context = new VendingDbContext();
             SoldItemRepository = new SoldItemRepository(Context);
             ContainableItemRepository = new ContainableItemRepository(Context);
-            report = new Report(SoldItemRepository,writer);
+            writer = new CsvWriter(filePath);
+            report = new Report(SoldItemRepository, writer);
+            reader = new CsvReader();
             products = new ProductCollection(ContainableItemRepository);
-            dispenser = new Dispenser(products,report);
+            dispenser = new Dispenser(products);
             payment = new PaymentTerminal();
 
         }
 
+        [TestCleanup]
+        public void TestCleanup() {
+            Context.Dispose();
+        }
+
         [TestMethod]
-        public async Task Test_Report() {
+        public async Task Test_Report_CSV() {
+           
+
             var chips = new Product { Name = "Chips", Price = 2.5 };
 
             payment.AddCash(2);
             payment.AddCoins(0.5);
 
-            payment.Add(dispenser);
+            payment.AddSubscriber(dispenser);
             payment.Pay(chips.Price);
+            dispenser.AddReport(report);
             var item = await dispenser.DeliverItem(0, 0);
             await report.WriteAllItemsSold();
 
-            Assert.AreEqual(true, item);
+            var itemsFromCsv = reader.ReadAll(filePath);
 
+
+            var allitems =await  SoldItemRepository.GetAll();
+
+            Assert.AreEqual(allitems.Count,itemsFromCsv.Count);
+           
         }
     }
 }
